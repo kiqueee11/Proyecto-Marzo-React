@@ -3,10 +3,14 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import { styles } from '../styles/Style';
 import { NavigationProps } from '../types';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export const MainScreen: React.FC<NavigationProps> = ({ navigation }) => {
   return (
-    <SafeAreaView style={styles.container}>
+     <LinearGradient
+                 colors={['#e35d66', '#a479af']}
+                 start={{ x: 0, y: 0 }}
+                 end={{ x: 1, y: 0 }} style={styles.container}>
       <TouchableOpacity style={styles.profileButton} onPress={() => navigation.navigate('EditProfile')}>
         <Image
           style={styles.profileImage}
@@ -31,6 +35,6 @@ export const MainScreen: React.FC<NavigationProps> = ({ navigation }) => {
       <TouchableOpacity style={styles.meetButton}>
         <Text style={styles.meetButtonText}>MEET</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </LinearGradient>
   );
 };

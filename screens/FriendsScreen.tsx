@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, Image, FlatList } from 'react-native';
 import { styles } from '../styles/Style';
 import { NavigationProps } from '../types';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface Friend {
   id: string;
@@ -28,7 +29,10 @@ export const FriendsScreen: React.FC<NavigationProps> = ({ navigation }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.friendsContainer}>
+     <LinearGradient
+                 colors={['#e35d66', '#a479af']}
+                 start={{ x: 0, y: 0 }}
+                 end={{ x: 1, y: 0 }} style={styles.friendsContainer}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>←</Text>
         <Text style={styles.headerText}>Amigos</Text>
@@ -47,6 +51,6 @@ export const FriendsScreen: React.FC<NavigationProps> = ({ navigation }) => {
           </TouchableOpacity>
         )}
       />
-    </SafeAreaView>
+    </LinearGradient>
   );
 };

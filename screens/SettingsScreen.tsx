@@ -3,12 +3,16 @@ import React from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, Switch } from 'react-native';
 import { styles } from '../styles/Style';
 import { NavigationProps } from '../types';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export const SettingsScreen: React.FC<NavigationProps> = ({ navigation }) => {
   const [isVisible, setIsVisible] = React.useState(true);
 
   return (
-    <SafeAreaView style={styles.settingsContainer}>
+     <LinearGradient
+                 colors={['#e35d66', '#a479af']}
+                 start={{ x: 0, y: 0 }}
+                 end={{ x: 1, y: 0 }} style={styles.settingsContainer}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>←</Text>
         <Text style={styles.headerText}>Ajustes</Text>
@@ -57,6 +61,6 @@ export const SettingsScreen: React.FC<NavigationProps> = ({ navigation }) => {
           <Text style={styles.deleteText}>Borrar cuenta</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </LinearGradient>
   );
 };
