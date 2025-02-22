@@ -24,6 +24,19 @@ export const styles = StyleSheet.create({
         width: "80%",
         marginBottom: 20,
     },
+    modalInputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#f0f0f0",
+        borderRadius: 10,
+        paddingHorizontal: 10,
+        marginVertical: 8,
+    },
+
+    modalInputIcon: {
+        marginRight: 10,
+    },
+
     input: {
         backgroundColor: "white",
         padding: 15,
@@ -102,10 +115,6 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
     },
-    editProfileContainer: {
-        flex: 1,
-        backgroundColor: "#FF6B8B",
-    },
     backButton: {
         flexDirection: "row",
         alignItems: "center",
@@ -117,61 +126,230 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingTop: 35,
     },
-    backButtonText: {
-        marginRight: 10,
-    },
+
     headerText: {
         fontSize: 20,
         fontWeight: "bold",
         color: "white",
     },
+    editProfileContainer: {
+        flex: 1,
+        backgroundColor: "#f8f8f8",
+    },
+    editProfileHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        backgroundColor: "transparent",
+        position: "absolute",
+        zIndex: 1,
+        top: 20,
+        left: 0,
+        right: 0,
+    },
+
+    backIcon: {
+        fontSize: 24,
+        color: "#000",
+    },
+    headerTitle: {
+        fontSize: 24,
+        fontWeight: "500",
+        color: "#fff",
+        marginLeft: 10,
+        fontStyle: "italic",
+    },
+    content: {
+        flex: 1,
+    },
+    profilePhotoContainer: {
+        width: "100%",
+        height: 250,
+        backgroundColor: "#ccc",
+    },
+    profilePhoto: {
+        width: "100%",
+        height: "100%",
+    },
+    profileInfoCard: {
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        marginTop: -20,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 30,
+    },
+    // Contenedor principal de información del perfil
+    editProfileInfoCard: {
+        height: "100%",
+        backgroundColor: "#fff",
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        marginTop: 0,
+        paddingHorizontal: 20,
+        paddingTop: 10,
+        paddingBottom: 30,
+    },
+    ageGenderContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 10,
+    },
+
+    // Contenedor para nombre, edad y género
+    nameContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 20,
+        paddingTop: 10,
+    },
+
+    // Estilos para el nombre
+    editProfileName: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "#000",
+        fontFamily: "sans-serif", // Cambia a una fuente disponible en tu proyecto
+    },
+
+    // Estilos para la edad
+    editProfileAge: {
+        fontSize: 20,
+        color: "#333",
+        marginLeft: 15,
+    },
+
+    // Estilos para el género
+    profileGender: {
+        fontSize: 16,
+        color: "#666",
+        marginLeft: 15,
+    },
+
+    // Botón de edición
+    editButton: {
+        marginLeft: "auto",
+    },
+
+    // Icono de edición
+    editIcon: {
+        fontSize: 22,
+        color: "#000",
+    },
+    descriptionSection: {
+        marginBottom: 20,
+    },
+    sectionLabel: {
+        fontSize: 18,
+        fontWeight: "500",
+        color: "#333",
+        marginBottom: 8,
+        fontFamily: "serif",
+    },
+    inputField: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc",
+        fontSize: 18,
+        width: "80%",
+    },
+
+    descriptionText: {
+        fontSize: 16,
+        color: "#666",
+    },
+    photosSection: {
+        marginTop: 20,
+    },
     photoGrid: {
         flexDirection: "row",
         flexWrap: "wrap",
-        padding: 10,
+        justifyContent: "space-around",
     },
-    photoBox: {
-        width: "33%",
-        aspectRatio: 1,
-        padding: 5,
+    gridPhotoContainer: {
+        width: 100,
+        height: 100,
+        margin: 5,
     },
-    cameraIcon: {
+    gridPhoto: {
         width: "100%",
         height: "100%",
-        backgroundColor: "#FFA0B4",
-        borderRadius: 10,
-    },
-    personalInfo: {
-        padding: 15,
-    },
-    sectionTitle: {
-        color: "white",
-        fontSize: 16,
-        marginBottom: 10,
-    },
-    infoInput: {
-        backgroundColor: "#FFA0B4",
-        padding: 10,
         borderRadius: 8,
-        marginBottom: 10,
     },
-    descriptionInput: {
-        backgroundColor: "#FFA0B4",
-        margin: 15,
-        padding: 10,
-        borderRadius: 8,
+    coverPhotoHighlight: {
+        borderWidth: 2,
+        borderColor: "blue", // O cualquier color que desees para resaltar
+    },
+    emptyPhotoSlot: {
+        width: 100,
         height: 100,
+        backgroundColor: "#ddd",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 8,
     },
-    socialLinks: {
-        padding: 15,
+    cameraIconContainer: {
+        alignItems: "center",
+    },
+    coverPhotoSection: {
+        marginTop: 20,
+        alignItems: "center",
+    },
+
+    coverPhotoLabel: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
+    coverPhoto: {
+        width: "100%",
+        height: 100, // Ajusta según lo necesites
+    },
+    plusIcon: {
+        marginBottom: 5,
+    },
+    cameraBody: {
+        backgroundColor: "white",
+        padding: 5,
+        borderRadius: 5,
+    },
+    socialSection: {
+        marginTop: 20,
     },
     socialIcons: {
         flexDirection: "row",
-        justifyContent: "space-around",
+        alignItems: "center",
+        gap: 15,
     },
-    socialIcon: {
-        width: 30,
-        height: 30,
+    socialIconButton: {
+        padding: 10,
+        borderRadius: 50,
+        backgroundColor: "#f1f1f1",
+    },
+    socialEditButton: {
+        padding: 10,
+    },
+    socialEditContainer: {
+        marginTop: 10,
+    },
+    saveButton: {
+        marginTop: 10,
+        backgroundColor: "#E35D66",
+        padding: 10,
+        borderRadius: 10,
+        textAlign: "center",
+        color: "white",
+        fontWeight: "bold",
+    },
+    instagramIcon: {
+        fontSize: 24,
+    },
+    facebookIcon: {
+        fontSize: 24,
+    },
+    twitterIcon: {
+        fontSize: 24,
     },
     settingsContainer: {
         flex: 1,
@@ -217,15 +395,15 @@ export const styles = StyleSheet.create({
     },
     logoutContainer: {
         flexDirection: "row",
-        justifyContent: "center", 
+        justifyContent: "center",
         alignItems: "center",
     },
     logoutButton: {
-        backgroundColor: "black", 
+        backgroundColor: "black",
         paddingVertical: 15,
         paddingHorizontal: 30,
         borderRadius: 8,
-        width: "80%", 
+        width: "80%",
         alignItems: "center",
         justifyContent: "center",
     },
@@ -237,30 +415,30 @@ export const styles = StyleSheet.create({
     },
     deleteContainer: {
         flexDirection: "row",
-        justifyContent: "center", 
-        alignItems: "center", 
-        marginVertical: 20, 
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 20,
     },
     deleteButton: {
         backgroundColor: "transparent",
         borderColor: "#FF8899",
-        borderWidth: 2, 
+        borderWidth: 2,
         paddingVertical: 15,
         paddingHorizontal: 30,
         borderRadius: 8,
-        width: "80%", 
-        alignItems: "center", 
+        width: "80%",
+        alignItems: "center",
         justifyContent: "center",
     },
     deleteText: {
         color: "black",
         textAlign: "center",
         fontWeight: "bold",
-        fontSize: 16, 
+        fontSize: 16,
     },
     friendsContainer: {
         flex: 1,
-        paddingTop: 10, 
+        paddingTop: 10,
     },
     cardHeader: {
         fontSize: 16,
@@ -268,11 +446,11 @@ export const styles = StyleSheet.create({
         color: "black",
     },
     card: {
-        backgroundColor: "white", 
-        borderRadius: 10, 
-        margin: 10, 
-        padding: 10, 
-        shadowColor: "#000", 
+        backgroundColor: "white",
+        borderRadius: 10,
+        margin: 10,
+        padding: 10,
+        shadowColor: "#000",
         shadowOpacity: 0.1,
         shadowRadius: 5,
         elevation: 3,
@@ -319,6 +497,56 @@ export const styles = StyleSheet.create({
     friendMessage: {
         fontSize: 14,
         color: "#666",
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+        width: "80%",
+        backgroundColor: "white",
+        padding: 20,
+        borderRadius: 10,
+        alignItems: "center",
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
+    modalInputField: {
+        width: "100%",
+        borderBottomWidth: 1,
+        borderBottomColor: "gray",
+        marginBottom: 10,
+        padding: 5,
+    },
+    modalButtonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+        marginTop: 10,
+    },
+    modalSaveButton: {
+        backgroundColor: "green",
+        padding: 10,
+        borderRadius: 5,
+        flex: 1,
+        alignItems: "center",
+        marginRight: 5,
+    },
+    modalCancelButton: {
+        backgroundColor: "red",
+        padding: 10,
+        borderRadius: 5,
+        flex: 1,
+        alignItems: "center",
+    },
+    modalButtonText: {
+        color: "white",
+        fontWeight: "bold",
     },
 });
 
