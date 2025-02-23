@@ -50,7 +50,10 @@ export const MainScreen: React.FC<NavigationProps> = ({ navigation }) => {
             </View>
 
             {/* Botón Meet */}
-            <TouchableOpacity style={styles.meetButton}>
+            <TouchableOpacity
+                style={styles.meetButton}
+                onPress={() => navigation.navigate("Chat")}
+            >
                 <Text style={styles.meetButtonText}>MEET</Text>
             </TouchableOpacity>
         </LinearGradient>

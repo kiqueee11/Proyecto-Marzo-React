@@ -10,6 +10,7 @@ import { MainScreen } from "./app/screens/MainScreen";
 import { EditProfileScreen } from "./app/screens/EditProfileScreen";
 import { SettingsScreen } from "./app/screens/SettingsScreen";
 import { FriendsScreen } from "./app/screens/FriendsScreen";
+import { ChatScreen } from "./app/screens/ChatScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ export default function App() {
                 />
                 <Stack.Screen name="Settings" component={SettingsScreen} />
                 <Stack.Screen name="Friends" component={FriendsScreen} />
+                <Stack.Screen name="Chat" component={ChatScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
