@@ -1,15 +1,14 @@
-// AgeRangeSelector.tsx
 import React from "react";
 import { View, Text } from "react-native";
 import Slider from '@react-native-community/slider';
 import { styles } from "../styles/Style";
 
 interface AgeRangeSelectorProps {
-    onChange: (range: string) => void; // Función que recibe el rango seleccionado
+    onChange: (range: string) => void; 
 }
 
 const AgeRangeSelector: React.FC<AgeRangeSelectorProps> = ({ onChange }) => {
-    const [ageRange, setAgeRange] = React.useState<number>(18); // Estado para el rango de edad
+    const [ageRange, setAgeRange] = React.useState<number>(18); 
 
     const handleSliderChange = (value: number) => {
         setAgeRange(value);

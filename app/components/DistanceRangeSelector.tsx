@@ -1,15 +1,14 @@
-// DistanceRangeSelector.tsx
 import React from "react";
 import { View, Text } from "react-native";
 import Slider from '@react-native-community/slider';
 import { styles } from "../styles/Style";
 
 interface DistanceRangeSelectorProps {
-    onChange: (distance: string) => void; // Función que recibe la distancia seleccionada
+    onChange: (distance: string) => void;
 }
 
 const DistanceRangeSelector: React.FC<DistanceRangeSelectorProps> = ({ onChange }) => {
-    const [distance, setDistance] = React.useState<number>(10); // Estado para la distancia
+    const [distance, setDistance] = React.useState<number>(10);
 
     const handleSliderChange = (value: number) => {
         setDistance(value);

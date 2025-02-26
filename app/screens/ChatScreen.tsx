@@ -26,9 +26,9 @@ export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
     const [userAvatar, setUserAvatar] = useState(
         require("../assets/flashmeet_logo.png")
     );
-    const [showActionIcons, setShowActionIcons] = useState(false); // Controla la visibilidad de los íconos
-    const [showActionPopup, setShowActionPopup] = useState(false); // Controla el popup de acción
-    const [actionPopupText, setActionPopupText] = useState(""); // Texto del popup
+    const [showActionIcons, setShowActionIcons] = useState(false); 
+    const [showActionPopup, setShowActionPopup] = useState(false); 
+    const [actionPopupText, setActionPopupText] = useState(""); 
     const flatListRef = useRef<FlatList>(null);
 
     const botResponses = [
@@ -43,7 +43,6 @@ export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
     ];
 
     useEffect(() => {
-        // Mostrar el popup después de 30 segundos
         const timer = setTimeout(() => {
             setShowIdentityModal(true);
         }, 30000);
@@ -76,11 +75,11 @@ export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
     }, [messages]);
 
     const revealIdentity = () => {
-        setUserAvatar(require("../assets/perfil.png")); // Asegúrate de que la ruta sea correcta
+        setUserAvatar(require("../assets/perfil.png")); 
         setUserName("Carlos Pérez");
         setIsIdentityRevealed(true);
         setShowIdentityModal(false);
-        setShowActionIcons(true); // Mostrar íconos de acción
+        setShowActionIcons(true); 
     };
 
     const handleActionPress = (action: string) => {
@@ -93,12 +92,12 @@ export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
     };
 
     const restartChat = () => {
-        setShowIdentityModal(false); // Cerrar el modal
-        setShowActionIcons(false); // Esconde los íconos de acción
-        setMessages([]); // Borrar el chat
-        setInputText(""); // Limpiar el texto de entrada
+        setShowIdentityModal(false); 
+        setShowActionIcons(false); 
+        setMessages([]); 
+        setInputText(""); 
 
-        navigation.replace("Chat"); // Reemplazar la pantalla actual
+        navigation.replace("Chat"); 
     };
 
     return (
@@ -217,7 +216,6 @@ export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
                 </View>
             </KeyboardAvoidingView>
 
-            {/* 🔹 Modal de Identidad */}
             <Modal visible={showIdentityModal} transparent animationType="fade">
                 <View style={styles.chatModalContainer}>
                     <View style={styles.chatModalContent}>
@@ -246,7 +244,6 @@ export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
                 </View>
             </Modal>
 
-            {/* 🔹 Popup de acción */}
             <Modal visible={showActionPopup} transparent animationType="fade">
                 <View style={styles.chatModalContainer}>
                     <View style={styles.chatModalContent}>

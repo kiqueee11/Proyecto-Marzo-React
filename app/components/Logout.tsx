@@ -6,7 +6,6 @@ import { NavigationProps } from "../../types";
 interface LogoutProps extends NavigationProps {}
 
 const Logout: React.FC<LogoutProps> = ({ navigation }) => {
-    // Función de confirmación para cerrar sesión
     const confirmLogout = () => {
         Alert.alert(
             "Cerrar sesión",
@@ -17,7 +16,7 @@ const Logout: React.FC<LogoutProps> = ({ navigation }) => {
                     text: "Sí",
                     onPress: () => {
                         Alert.alert("Sesión cerrada");
-                        navigation.replace("Login"); // Vuelve a login
+                        navigation.replace("Login"); 
                     },
                 },
             ]

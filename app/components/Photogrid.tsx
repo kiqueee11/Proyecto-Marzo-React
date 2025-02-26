@@ -16,7 +16,7 @@ const PhotoGrid = ({
     updateCoverPhoto,
 }: PhotoGridProps) => {
     const [photos, setPhotos] = useState([
-        coverPhoto, // Foto de portada que viene como prop desde EditProfileScreen
+        coverPhoto, 
         null,
         null,
         null,
@@ -26,7 +26,6 @@ const PhotoGrid = ({
 
     const [lastPress, setLastPress] = useState(0);
 
-    // Manejador para elegir la foto desde la galería
     const pickImage = async (index: number) => {
         const permissionResult =
             await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -47,7 +46,6 @@ const PhotoGrid = ({
             newPhotos[index] = pickerResult.assets[0].uri;
             setPhotos(newPhotos);
 
-            // Si la foto modificada es la foto de perfil (índice 0)
             if (index === 0) {
                 updateCoverPhoto(pickerResult.assets[0].uri);
                 updateProfilePhoto(pickerResult.assets[0].uri);
@@ -55,27 +53,23 @@ const PhotoGrid = ({
         }
     };
 
-    // Función para manejar doble clic y poner la foto como portada
     const handleDoubleClick = (index: number) => {
         const currentTime = new Date().getTime();
         const timeDiff = currentTime - lastPress;
 
-        // Si el tiempo entre dos clics es menor a 300ms, es un doble clic
         if (timeDiff < 300) {
             const newPhotos = [...photos];
             const clickedPhoto = newPhotos[index];
 
-            // Establecer la foto como portada (posición 0)
             newPhotos.splice(index, 1);
             newPhotos.unshift(clickedPhoto);
 
             setPhotos(newPhotos);
 
-            // Actualiza la foto de portada
             updateCoverPhoto(newPhotos[0]!);
             updateProfilePhoto(newPhotos[0]!);
         }
-        setLastPress(currentTime); // Actualizar el último clic
+        setLastPress(currentTime);
     };
 
     return (
@@ -85,8 +79,8 @@ const PhotoGrid = ({
                 {photos.map((photo, index) => (
                     <TouchableOpacity
                         key={index}
-                        onPress={() => handleDoubleClick(index)} // Detectar el doble clic
-                        onLongPress={() => pickImage(index)} // Seleccionar una foto para actualizarla
+                        onPress={() => handleDoubleClick(index)} 
+                        onLongPress={() => pickImage(index)} 
                     >
                         {photo ? (
                             <View style={styles.gridPhotoContainer}>

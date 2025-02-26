@@ -1,4 +1,3 @@
-// screens/RegisterScreen.tsx
 import React from "react";
 import {
     View,
@@ -15,9 +14,9 @@ import { LinearGradient } from "expo-linear-gradient";
 export const RegisterScreen: React.FC<NavigationProps> = ({ navigation }) => {
     return (
         <LinearGradient
-            colors={["#E35D66", "#A479AF"]} // Rosado a morado
-            start={{ x: 0, y: 0.5 }} // Comienza en el lado izquierdo
-            end={{ x: 1, y: 0.5 }} // Termina en el lado derecho
+            colors={["#E35D66", "#A479AF"]} 
+            start={{ x: 0, y: 0.5 }} 
+            end={{ x: 1, y: 0.5 }} 
             style={styles.container}
         >
             <Image

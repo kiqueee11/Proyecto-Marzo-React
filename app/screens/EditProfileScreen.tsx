@@ -36,20 +36,17 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
     });
     const [socialModalVisible, setSocialModalVisible] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-    const [profilePhoto, setProfilePhoto] = useState<string | null>(null); // Foto de perfil
-    const [coverPhoto, setCoverPhoto] = useState<string | null>(null); // Foto de portada
+    const [profilePhoto, setProfilePhoto] = useState<string | null>(null); 
+    const [coverPhoto, setCoverPhoto] = useState<string | null>(null); 
 
-    // Función para actualizar la foto de perfil
     const updateProfilePhoto = (newPhotoUri: string) => {
         setProfilePhoto(newPhotoUri);
     };
 
-    // Función para actualizar la foto de portada
     const updateCoverPhoto = (newPhotoUri: string) => {
         setCoverPhoto(newPhotoUri);
     };
 
-    // Efecto para solicitar permisos en iOS al iniciar
     useEffect(() => {
         (async () => {
             if (Platform.OS === "ios") {
@@ -83,7 +80,6 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                     <Text style={styles.headerText}>Perfil</Text>
                 </View>
 
-                {/* Imagen de perfil */}
                 <View style={styles.profilePhotoContainer}>
                     <TouchableOpacity
                         onPress={() => updateProfilePhoto("newUriHere")}
@@ -100,7 +96,6 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                     </TouchableOpacity>
                 </View>
 
-                {/* Información del perfil */}
                 <ScrollView style={styles.content}>
                     <View style={styles.editProfileInfoCard}>
                         <View style={styles.ageGenderContainer}>
@@ -130,9 +125,7 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                             {profile.description}
                         </Text>
 
-                        {/* Fotos del perfil */}
                         <View style={styles.container}>
-                            {/* Pasa la función y el estado a PhotoGrid */}
                             <PhotoGrid
                                 coverPhoto={coverPhoto}
                                 updateProfilePhoto={updateProfilePhoto}
@@ -140,7 +133,6 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                             />
                         </View>
 
-                        {/* Redes sociales */}
                         <View style={styles.socialSection}>
                             <View style={styles.ageGenderContainer}>
                                 <Text style={styles.sectionLabel}>
@@ -199,7 +191,6 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                     </View>
                 </ScrollView>
 
-                {/* Modal para editar perfil */}
                 <EditProfileModal
                     visible={modalVisible}
                     onClose={() => setModalVisible(false)}
@@ -209,7 +200,6 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                     }
                 />
 
-                {/* Modal para editar redes sociales */}
                 <EditSocialLinksModal
                     visible={socialModalVisible}
                     onClose={() => setSocialModalVisible(false)}

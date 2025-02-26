@@ -181,7 +181,6 @@ export const styles = StyleSheet.create({
         paddingTop: 20,
         paddingBottom: 30,
     },
-    // Contenedor principal de información del perfil
     editProfileInfoCard: {
         height: "100%",
         backgroundColor: "#fff",
@@ -197,8 +196,6 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 10,
     },
-
-    // Contenedor para nombre, edad y género
     nameContainer: {
         flexDirection: "row",
         alignItems: "center",
@@ -206,34 +203,29 @@ export const styles = StyleSheet.create({
         paddingTop: 10,
     },
 
-    // Estilos para el nombre
     editProfileName: {
         fontSize: 24,
         fontWeight: "bold",
         color: "#000",
-        fontFamily: "sans-serif", // Cambia a una fuente disponible en tu proyecto
+        fontFamily: "sans-serif", 
     },
 
-    // Estilos para la edad
     editProfileAge: {
         fontSize: 20,
         color: "#333",
         marginLeft: 15,
     },
 
-    // Estilos para el género
     profileGender: {
         fontSize: 16,
         color: "#666",
         marginLeft: 15,
     },
 
-    // Botón de edición
     editButton: {
         marginLeft: "auto",
     },
 
-    // Icono de edición
     editIcon: {
         fontSize: 22,
         color: "#000",
@@ -279,7 +271,7 @@ export const styles = StyleSheet.create({
     },
     coverPhotoHighlight: {
         borderWidth: 2,
-        borderColor: "blue", // O cualquier color que desees para resaltar
+        borderColor: "blue", 
     },
     emptyPhotoSlot: {
         width: 100,
@@ -304,7 +296,7 @@ export const styles = StyleSheet.create({
     },
     coverPhoto: {
         width: "100%",
-        height: 100, // Ajusta según lo necesites
+        height: 100,
     },
     plusIcon: {
         marginBottom: 5,

@@ -6,7 +6,6 @@ import { NavigationProps } from "../../types";
 interface DeleteAccountProps extends NavigationProps {}
 
 const DeleteAccount: React.FC<DeleteAccountProps> = ({ navigation }) => {
-    // Función de confirmación para eliminar cuenta
     const confirmDeleteAccount = () => {
         Alert.alert(
             "Borrar cuenta",
@@ -17,7 +16,7 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ navigation }) => {
                     text: "Sí",
                     onPress: () => {
                         Alert.alert("Cuenta borrada");
-                        navigation.replace("Login"); // Vuelve a login
+                        navigation.replace("Login"); 
                     },
                 },
             ]
