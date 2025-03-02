@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    Image,
-    ScrollView,
-    Platform,
-    Linking,
-    KeyboardAvoidingView,
+import { 
+    View, Text, TouchableOpacity, Image, ScrollView, 
+    Platform, Linking, KeyboardAvoidingView 
 } from "react-native";
-import { NavigationProps } from "../../types";
 import styles from "../styles/Style";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import EditProfileModal from "../components/EditProfileModal";
-import EditSocialLinksModal from "../components/EditSocialLinksModal";
-import PhotoGrid from "../components/Photogrid";
+import * as ImagePicker from "expo-image-picker"; // 📌 Importamos ImagePicker para seleccionar imágenes
+import EditProfileModal from "../components/EditProfileModal"; // 📌 Modal para editar perfil
+import EditSocialLinksModal from "../components/EditSocialLinksModal"; // 📌 Modal para editar redes sociales
+import PhotoGrid from "../components/Photogrid"; // 📌 Componente para mostrar imágenes en cuadrícula
+import { PropsStackNavigation } from "../interfaces/StackNav"; // 📌 Tipado para la navegación
 
-export const EditProfileScreen: React.FC<NavigationProps> = ({
-    navigation,
-}) => {
+export function EditProfileScreen({ navigation }: PropsStackNavigation) {
+    // 📌 Estado del perfil del usuario
     const [profile, setProfile] = useState({
         name: "Enrique Martin",
         age: "26",
@@ -29,16 +22,22 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
         photos: [1],
     });
 
+    // 📌 Estado para los enlaces de redes sociales
     const [socialLinks, setSocialLinks] = useState({
         instagram: "https://www.instagram.com",
         facebook: "https://www.facebook.com",
         twitter: "https://www.twitter.com",
     });
+
+    // 📌 Estados para manejar la visibilidad de los modales
     const [socialModalVisible, setSocialModalVisible] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
+    
+    // 📌 Estados para las fotos de perfil y portada
     const [profilePhoto, setProfilePhoto] = useState<string | null>(null); 
     const [coverPhoto, setCoverPhoto] = useState<string | null>(null); 
 
+    // 📌 Funciones para actualizar las fotos
     const updateProfilePhoto = (newPhotoUri: string) => {
         setProfilePhoto(newPhotoUri);
     };
@@ -47,11 +46,11 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
         setCoverPhoto(newPhotoUri);
     };
 
+    // 📌 Pedimos permisos para la galería (⚠️ Aquí podría estar el warning)
     useEffect(() => {
         (async () => {
             if (Platform.OS === "ios") {
-                const { granted } =
-                    await ImagePicker.requestMediaLibraryPermissionsAsync();
+                const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
                 if (!granted) {
                     alert("Necesitas permisos para acceder a la galería.");
                 }
@@ -70,6 +69,7 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 style={{ flex: 1 }}
             >
+                {/* 📌 Encabezado con botón de regreso */}
                 <View style={styles.headerContainer}>
                     <TouchableOpacity
                         onPress={() => navigation.goBack()}
@@ -80,22 +80,16 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                     <Text style={styles.headerText}>Perfil</Text>
                 </View>
 
-                <View style={styles.profilePhotoContainer}>
-                    <TouchableOpacity
-                        onPress={() => updateProfilePhoto("newUriHere")}
-                    >
-                        <Image
-                            source={
-                                profilePhoto
-                                    ? { uri: profilePhoto }
-                                    : require("../assets/perfil.png")
-                            }
-                            style={styles.profilePhoto}
-                            resizeMode="cover"
+                {/* 📌 Foto de perfil con opción de cambiar */}
+                <View style={styles.profilePhotoContainer}>                    
+                    <Image
+                        source={coverPhoto ? { uri: coverPhoto } : require("../../assets/perfil.png")}
+                        style={styles.profilePhoto}
+                        resizeMode="cover"
                         />
-                    </TouchableOpacity>
                 </View>
 
+                {/* 📌 Información del perfil */}
                 <ScrollView style={styles.content}>
                     <View style={styles.editProfileInfoCard}>
                         <View style={styles.ageGenderContainer}>
@@ -104,27 +98,18 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                             </Text>
                             <TouchableOpacity
                                 style={styles.editButton}
-                                onPress={() => setModalVisible(true)}
+                                onPress={() => setModalVisible(true)} // 📌 Abre modal de edición
                             >
-                                <Ionicons
-                                    name="pencil"
-                                    size={22}
-                                    color="black"
-                                />
+                                <Ionicons name="pencil" size={22} color="black" />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.ageGenderContainer}>
-                            <Text style={styles.editProfileAge}>
-                                {profile.age}
-                            </Text>
-                            <Text style={styles.profileGender}>
-                                {profile.gender}
-                            </Text>
+                            <Text style={styles.editProfileAge}>{profile.age}</Text>
+                            <Text style={styles.profileGender}>{profile.gender}</Text>
                         </View>
-                        <Text style={styles.descriptionText}>
-                            {profile.description}
-                        </Text>
+                        <Text style={styles.descriptionText}>{profile.description}</Text>
 
+                        {/* 📌 Cuadrícula de fotos */}
                         <View style={styles.container}>
                             <PhotoGrid
                                 coverPhoto={coverPhoto}
@@ -133,71 +118,47 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
                             />
                         </View>
 
+                        {/* 📌 Redes sociales con opción de edición */}
                         <View style={styles.socialSection}>
                             <View style={styles.ageGenderContainer}>
-                                <Text style={styles.sectionLabel}>
-                                    Redes Sociales
-                                </Text>
+                                <Text style={styles.sectionLabel}>Redes Sociales</Text>
                                 <TouchableOpacity
                                     style={styles.editButton}
-                                    onPress={() => setSocialModalVisible(true)}
+                                    onPress={() => setSocialModalVisible(true)} // 📌 Abre modal de redes
                                 >
-                                    <Ionicons
-                                        name="pencil"
-                                        size={22}
-                                        color="black"
-                                    />
+                                    <Ionicons name="pencil" size={22} color="black" />
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.socialIcons}>
                                 <TouchableOpacity
-                                    onPress={() =>
-                                        Linking.openURL(socialLinks.instagram)
-                                    }
+                                    onPress={() => Linking.openURL(socialLinks.instagram)}
                                     style={styles.socialIconButton}
                                 >
-                                    <Ionicons
-                                        name="logo-instagram"
-                                        size={24}
-                                        color="black"
-                                    />
+                                    <Ionicons name="logo-instagram" size={24} color="black" />
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    onPress={() =>
-                                        Linking.openURL(socialLinks.facebook)
-                                    }
+                                    onPress={() => Linking.openURL(socialLinks.facebook)}
                                     style={styles.socialIconButton}
                                 >
-                                    <Ionicons
-                                        name="logo-facebook"
-                                        size={24}
-                                        color="black"
-                                    />
+                                    <Ionicons name="logo-facebook" size={24} color="black" />
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    onPress={() =>
-                                        Linking.openURL(socialLinks.twitter)
-                                    }
+                                    onPress={() => Linking.openURL(socialLinks.twitter)}
                                     style={styles.socialIconButton}
                                 >
-                                    <Ionicons
-                                        name="logo-twitter"
-                                        size={24}
-                                        color="black"
-                                    />
+                                    <Ionicons name="logo-twitter" size={24} color="black" />
                                 </TouchableOpacity>
                             </View>
                         </View>
                     </View>
                 </ScrollView>
 
+                {/* 📌 Modales de edición */}
                 <EditProfileModal
                     visible={modalVisible}
                     onClose={() => setModalVisible(false)}
                     profile={profile}
-                    onSave={(updatedProfile) =>
-                        setProfile((prev) => ({ ...prev, ...updatedProfile }))
-                    }
+                    onSave={(updatedProfile) => setProfile((prev) => ({ ...prev, ...updatedProfile }))}
                 />
 
                 <EditSocialLinksModal
@@ -209,4 +170,4 @@ export const EditProfileScreen: React.FC<NavigationProps> = ({
             </KeyboardAvoidingView>
         </LinearGradient>
     );
-};
+}

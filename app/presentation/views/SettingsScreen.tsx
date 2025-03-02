@@ -1,33 +1,18 @@
 import React, { useState } from "react";
-import {
-    ScrollView,
-    View,
-    Text,
-    KeyboardAvoidingView,
-    Platform,
-    Switch,
-    TouchableOpacity,
-} from "react-native";
-import { styles } from "../styles/Style";
+import { ScrollView, View, Text, KeyboardAvoidingView, Platform, Switch, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import AgeRangeSelector from "../components/AgeRangeSelector";
 import DistanceRangeSelector from "../components/DistanceRangeSelector";
 import Logout from "../components/Logout";
 import DeleteAccount from "../components/DeleteAccount";
-import { NavigationProps } from "../../types";
+import { PropsStackNavigation } from "../interfaces/StackNav";
+import { LoginScreen } from "./LoginScreen";
 
-export const SettingsScreen: React.FC<NavigationProps> = ({ navigation }) => {
+export function SettingsScreen({ navigation }: PropsStackNavigation) {
     const [isVisible, setIsVisible] = useState(true);
     const [selectedPreference, setSelectedPreference] = useState("Ambos");
-
-    const handleAgeRangeChange = (range: string) => {
-        console.log(`Rango de edad seleccionado: ${range}`);
-    };
-
-    const handleDistanceChange = (distance: string) => {
-        console.log(`Distancia seleccionada: ${distance}`);
-    };
 
     return (
         <LinearGradient
@@ -50,14 +35,10 @@ export const SettingsScreen: React.FC<NavigationProps> = ({ navigation }) => {
                     <Text style={styles.headerText}>Ajustes</Text>
                 </View>
 
-                <View style={styles.settingsSection}>
-                    <Text style={styles.settingsHeader}>
-                        Ajustes de descubrimiento
-                    </Text>
-
-                    <AgeRangeSelector onChange={handleAgeRangeChange} />
-
-                    <DistanceRangeSelector onChange={handleDistanceChange} />
+                <ScrollView contentContainerStyle={styles.settingsSection}>
+                    <Text style={styles.settingsHeader}>Ajustes de descubrimiento</Text>
+                    <AgeRangeSelector onChange={(range) => console.log(`Rango de edad seleccionado: ${range}`)} />
+                    <DistanceRangeSelector onChange={(distance) => console.log(`Distancia seleccionada: ${distance}`)} />
 
                     <View style={styles.card}>
                         <Text>Preferencias</Text>
@@ -67,13 +48,9 @@ export const SettingsScreen: React.FC<NavigationProps> = ({ navigation }) => {
                                     key={option}
                                     style={[
                                         styles.preferenceButton,
-                                        selectedPreference === option
-                                            ? styles.activePreference
-                                            : {},
+                                        selectedPreference === option ? styles.activePreference : {},
                                     ]}
-                                    onPress={() => {
-                                        setSelectedPreference(option);
-                                    }}
+                                    onPress={() => setSelectedPreference(option)}
                                 >
                                     <Text>{option}</Text>
                                 </TouchableOpacity>
@@ -85,20 +62,67 @@ export const SettingsScreen: React.FC<NavigationProps> = ({ navigation }) => {
                         <Text>Perfil visible</Text>
                         <Switch
                             value={isVisible}
-                            onValueChange={(value) => {
-                                setIsVisible(value);
-                                console.log(
-                                    value
-                                        ? "Perfil visible activado"
-                                        : "Perfil oculto"
-                                );
-                            }}
+                            onValueChange={setIsVisible}
                         />
                     </View>
-                </View>
-                <Logout navigation={navigation} />
-                <DeleteAccount navigation={navigation} />
+
+                    <Logout navigation={navigation}/>
+                    <DeleteAccount navigation={navigation} />
+                </ScrollView>
             </KeyboardAvoidingView>
         </LinearGradient>
     );
-};
+}
+
+
+export const styles = StyleSheet.create({
+    settingsContainer: {
+        flex: 1,
+        paddingTop: 50,
+    },
+    headerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 20,
+        marginBottom: 20,
+    },
+    backButton: {
+        marginRight: 10,
+    },
+    headerText: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "white",
+    },
+    settingsSection: {
+        paddingHorizontal: 20,
+        paddingBottom: 20,
+    },
+    settingsHeader: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "white",
+        marginBottom: 10,
+    },
+    card: {
+        backgroundColor: "white",
+        borderRadius: 10,
+        padding: 15,
+        marginBottom: 15,
+    },
+    preferencesToggle: {
+        flexDirection: "row",
+        backgroundColor: "#black",
+        borderRadius: 8,
+        marginVertical: 10,
+        overflow: "hidden",
+    },
+    preferenceButton: {
+        flex: 1,
+        padding: 15,
+        alignItems: "center",
+    },
+    activePreference: {
+        backgroundColor: "#FF8899",
+    },
+});

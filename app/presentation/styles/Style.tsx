@@ -254,6 +254,11 @@ export const styles = StyleSheet.create({
     photosSection: {
         marginTop: 20,
     },
+    profileImageContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 10,
+    },
     photoGrid: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -664,6 +669,12 @@ export const styles = StyleSheet.create({
     },
     actionIcon: {
         marginLeft: 10,
+    },
+    errorText: {
+        color: "red",
+        fontSize: 14,
+        textAlign: "center",
+        marginTop: 5,
     },
 });
 

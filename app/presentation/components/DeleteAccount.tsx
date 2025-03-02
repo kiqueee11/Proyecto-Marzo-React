@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, Alert, View } from "react-native";
 import { styles } from "../styles/Style";
-import { NavigationProps } from "../../types";
+import { NavigationProps } from "../../../types";
 
 interface DeleteAccountProps extends NavigationProps {}
 

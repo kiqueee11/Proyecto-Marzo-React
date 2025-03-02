@@ -1,21 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    Image,
-    FlatList,
-    KeyboardAvoidingView,
-    Platform,
-    Modal,
-} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, KeyboardAvoidingView, Platform, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../styles/Style";
-import { NavigationProps } from "../../types";
 import { LinearGradient } from "expo-linear-gradient";
+import { PropsStackNavigation } from "../interfaces/StackNav";
 
-export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
+export function ChatScreen({ navigation}: PropsStackNavigation) {
     const [messages, setMessages] = useState([
         { id: "1", text: "¡Hola! ¿En qué puedo ayudarte?", sender: "bot" },
     ]);
@@ -24,7 +14,7 @@ export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
     const [isIdentityRevealed, setIsIdentityRevealed] = useState(false);
     const [userName, setUserName] = useState("Username");
     const [userAvatar, setUserAvatar] = useState(
-        require("../assets/flashmeet_logo.png")
+        require("../../assets/flashmeet_logo.png")
     );
     const [showActionIcons, setShowActionIcons] = useState(false); 
     const [showActionPopup, setShowActionPopup] = useState(false); 
@@ -75,7 +65,7 @@ export const ChatScreen: React.FC<NavigationProps> = ({ navigation }) => {
     }, [messages]);
 
     const revealIdentity = () => {
-        setUserAvatar(require("../assets/perfil.png")); 
+        setUserAvatar(require("../../assets/perfil.png")); 
         setUserName("Carlos Pérez");
         setIsIdentityRevealed(true);
         setShowIdentityModal(false);

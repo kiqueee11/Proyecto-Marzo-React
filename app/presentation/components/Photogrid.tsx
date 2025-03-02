@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
+import * as ImagePicker from "expo-image-picker"; 
 import { styles } from "../styles/Style";
 
 interface PhotoGridProps {
@@ -74,13 +74,16 @@ const PhotoGrid = ({
 
     return (
         <View style={styles.photosSection}>
-            <Text style={styles.sectionLabel}>Fotos</Text>
+            <Text style={styles.sectionLabel}>Fotos</Text>          
+            
+    
+            {/* Cuadrícula de Fotos (TOUCHABLE) */}
             <View style={styles.photoGrid}>
                 {photos.map((photo, index) => (
                     <TouchableOpacity
                         key={index}
-                        onPress={() => handleDoubleClick(index)} 
-                        onLongPress={() => pickImage(index)} 
+                        onPress={() => handleDoubleClick(index)}
+                        onLongPress={() => pickImage(index)}
                     >
                         {photo ? (
                             <View style={styles.gridPhotoContainer}>
@@ -101,6 +104,6 @@ const PhotoGrid = ({
             </View>
         </View>
     );
-};
+}
 
 export default PhotoGrid;
