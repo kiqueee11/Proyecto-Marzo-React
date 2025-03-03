@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, KeyboardAvoidingView, Platform, Modal } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import styles from "../styles/Style";
+import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { PropsStackNavigation } from "../interfaces/StackNav";
 
@@ -264,3 +264,134 @@ export function ChatScreen({ navigation}: PropsStackNavigation) {
         </LinearGradient>
     );
 };
+
+export const styles = StyleSheet.create({
+    chatContainer: {
+        flex: 1,
+    },
+    chatModalContainer: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.6)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    chatModalContent: {
+        backgroundColor: "white",
+        padding: 20,
+        borderRadius: 10,
+        width: "80%",
+        alignItems: "center",
+    },
+    chatModalText: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 15,
+    },
+    chatModalButtons: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        width: "100%",
+    },
+    chatModalButtonYes: {
+        backgroundColor: "#28a745",
+        padding: 10,
+        borderRadius: 5,
+        width: "40%",
+        alignItems: "center",
+    },
+    chatModalButtonNo: {
+        backgroundColor: "#dc3545",
+        padding: 10,
+        borderRadius: 5,
+        width: "40%",
+        alignItems: "center",
+    },
+    chatModalButtonText: {
+        color: "white",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+    backButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 15,
+    },
+    headerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 15,
+        paddingTop: 35,
+    },
+    userAvatar: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+    },
+    usernameText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "white",
+        marginLeft: 10,
+        fontStyle: "italic",
+    },
+    actionIconsContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        position: "absolute",
+        right: 10,
+        top: 10,
+        paddingHorizontal: 15,
+        paddingTop: 40,
+    },
+    actionIcon: {
+        marginLeft: 10,
+    },
+    myMessage: {
+        alignSelf: "flex-end",
+        backgroundColor: "black",
+        padding: 10,
+        borderRadius: 20,
+        marginVertical: 5,
+        maxWidth: "70%",
+    },
+    myMessageText: {
+        fontSize: 16,
+        color: "white",
+    },
+    chatInputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 10,
+        backgroundColor: "white",
+        borderRadius: 25,
+        margin: 10,
+    },
+    chatInput: {
+        flex: 1,
+        fontSize: 16,
+        color: "black",
+        paddingHorizontal: 10,
+    },
+    sendButton: {
+        backgroundColor: "#A479AF",
+        padding: 10,
+        borderRadius: 25,
+        marginLeft: 5,
+    },
+    otherMessage: {
+        alignSelf: "flex-start",
+        backgroundColor: "white",
+        padding: 10,
+        borderRadius: 20,
+        marginVertical: 5,
+        maxWidth: "70%",
+        shadowColor: "#000",
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+    },
+    otherMessageText: {
+        fontSize: 16,
+        color: "black",
+    },
+
+});

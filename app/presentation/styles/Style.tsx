@@ -63,92 +63,12 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
     },
-    linkContainer: {
-        marginTop: 20,
-    },
-    link: {
-        color: "white",
-        textDecorationLine: "underline",
-        marginVertical: 5,
-    },
-    profileButton: {
-        alignItems: "center",
-        marginBottom: 30,
-    },
-    profileImage: {
-        width: 220,
-        height: 220,
-        borderRadius: 100,
-        marginBottom: 10,
-    },
-    profileName: {
-        color: "white",
-        fontSize: 20,
-        fontWeight: "bold",
-    },
-    profileAge: {
-        color: "white",
-        fontSize: 16,
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        width: "100%",
-        marginVertical: 20,
-    },
-    iconButton: {
-        alignItems: "center",
-    },
-    iconButtonText: {
-        color: "white",
-        fontSize: 14,
-    },
-    meetButton: {
-        backgroundColor: "black",
-        padding: 20,
-        borderRadius: 10,
-        width: "80%",
-        alignItems: "center",
-    },
-    meetButtonText: {
-        color: "white",
-        fontSize: 20,
-        fontWeight: "bold",
-    },
+    
     backButton: {
         flexDirection: "row",
         alignItems: "center",
         padding: 15,
     },
-    headerContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 15,
-        paddingTop: 35,
-    },
-
-    headerText: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "white",
-    },
-    editProfileContainer: {
-        flex: 1,
-        backgroundColor: "#f8f8f8",
-    },
-    editProfileHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        backgroundColor: "transparent",
-        position: "absolute",
-        zIndex: 1,
-        top: 20,
-        left: 0,
-        right: 0,
-    },
-
     backIcon: {
         fontSize: 24,
         color: "#000",
@@ -162,77 +82,7 @@ export const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-    },
-    profilePhotoContainer: {
-        width: "100%",
-        height: 250,
-        backgroundColor: "#ccc",
-    },
-    profilePhoto: {
-        width: "100%",
-        height: "100%",
-    },
-    profileInfoCard: {
-        backgroundColor: "#fff",
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        marginTop: -20,
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        paddingBottom: 30,
-    },
-    editProfileInfoCard: {
-        height: "100%",
-        backgroundColor: "#fff",
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        marginTop: 0,
-        paddingHorizontal: 20,
-        paddingTop: 10,
-        paddingBottom: 30,
-    },
-    ageGenderContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 10,
-    },
-    nameContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 20,
-        paddingTop: 10,
-    },
-
-    editProfileName: {
-        fontSize: 24,
-        fontWeight: "bold",
-        color: "#000",
-        fontFamily: "sans-serif", 
-    },
-
-    editProfileAge: {
-        fontSize: 20,
-        color: "#333",
-        marginLeft: 15,
-    },
-
-    profileGender: {
-        fontSize: 16,
-        color: "#666",
-        marginLeft: 15,
-    },
-
-    editButton: {
-        marginLeft: "auto",
-    },
-
-    editIcon: {
-        fontSize: 22,
-        color: "#000",
-    },
-    descriptionSection: {
-        marginBottom: 20,
-    },
+    },    
     sectionLabel: {
         fontSize: 18,
         fontWeight: "500",

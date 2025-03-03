@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { styles } from "../styles/Style";
+import { StyleSheet } from "react-native";
 import { PropsStackNavigation } from "../interfaces/StackNav";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -40,3 +40,55 @@ export function MainScreen({ navigation }: PropsStackNavigation) {
     );
 }
 
+export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    logo: {
+        width: 150,
+        height: 150,
+        resizeMode: "contain",
+    },
+    profileButton: {
+        alignItems: "center",
+        marginBottom: 30,
+    },
+    profileImage: {
+        width: 220,
+        height: 220,
+        borderRadius: 100,
+        marginBottom: 10,
+    },
+    profileName: {
+        color: "white",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    profileAge: {
+        color: "white",
+        fontSize: 16,
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        width: "100%",
+        marginVertical: 20,
+    },
+    iconButton: {
+        alignItems: "center",
+    },
+    meetButton: {
+        backgroundColor: "black",
+        padding: 20,
+        borderRadius: 10,
+        width: "80%",
+        alignItems: "center",
+    },
+    meetButtonText: {
+        color: "white",
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+});
