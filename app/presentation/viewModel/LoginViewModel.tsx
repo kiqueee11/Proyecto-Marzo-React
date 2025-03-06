@@ -1,48 +1,46 @@
 import { useState } from "react";
 import { loginAuthUseCase } from "../../domain/useCases/auth/LoginAuth";
-import { SaveUserUseCase } from "../../domain/useCases/userLocal/SaveUser";
-import { useUserLocalStorage } from "../hooks/useUserLocalStorage";
-import { UserLogin, UserLoginInterface } from "../../domain/entities/User";
 
-export const LoginViewModel = () => {
-    const [errorMessage, setErrorMessage] = useState<string>("");
-    const [values, setValues] = useState<UserLoginInterface>({ email: "", password: "" });
+export function LoginViewModel() {
+    const [email, setEmail] = useState("");
+    const [clave, setClave] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const { user, getUserSession } = useUserLocalStorage();
-
-    const onChangeLogin = (property: keyof UserLoginInterface, value: string) => {
-        setValues((prev) => ({ ...prev, [property]: value }));
+    const onChangeLogin = (field: string, value: string) => {
+        if (field === "email") setEmail(value);
+        if (field === "clave") setClave(value);
     };
 
-    const validateForm = (): boolean => {
-        if (!values.email.trim()) {
-            setErrorMessage("El correo es obligatorio");
+    const login = async (): Promise<boolean> => {
+        setIsLoading(true);
+        try {
+            const response = await loginAuthUseCase({ email, clave });
+            if (response.success) {
+                setIsLoading(false);
+                
+                // Agregar un console.log para mostrar que el login fue exitoso
+                console.log("Login exitoso, datos del usuario:", response.data);
+                
+                return true;
+            } else {
+                setErrorMessage(response.message || "Error desconocido");  // Aquí se setea el mensaje de error
+                setIsLoading(false);
+                return false;
+            }
+        } catch (error) {
+            setErrorMessage("Error al iniciar sesión. Intenta nuevamente.");
+            setIsLoading(false);
             return false;
-        }
-        if (!values.password.trim()) {
-            setErrorMessage("La contraseña es obligatoria");
-            return false;
-        }
-        return true;
-    };
-
-    const login = async () => {
-        if (!validateForm()) return;
-
-        const response = await loginAuthUseCase(values);
-        if (!response.success) {
-            setErrorMessage(String(response.message || "Ocurrió un error desconocido."));
-        } else {
-            await SaveUserUseCase(response.data as UserLogin);
-            getUserSession();
         }
     };
 
     return {
-        ...values,
+        email,
+        clave,
         onChangeLogin,
         login,
         errorMessage,
-        user,
+        isLoading,
     };
-};
+}

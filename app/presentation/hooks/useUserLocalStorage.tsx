@@ -1,31 +1,49 @@
-import { useState, useEffect } from "react";
+// import { useState, useEffect } from "react";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { UserLogin } from "../../domain/entities/User";
+
+// export const useUserLocalStorage = () => {
+//     const [user, setUser] = useState<UserLogin | null>(null);
+
+//     const getUserSession = async () => {
+//         try {
+//             const userData = await AsyncStorage.getItem("user");
+//             if (userData) setUser(JSON.parse(userData));
+//         } catch (error) {
+//             console.error("Error al obtener la sesión del usuario:", error);
+//         }
+//     };
+
+//     const clearUserSession = async () => {
+//         try {
+//             await AsyncStorage.removeItem("user");
+//             setUser(null);
+//         } catch (error) {
+//             console.error("Error al cerrar sesión:", error);
+//         }
+//     };
+
+//     useEffect(() => {
+//         getUserSession();
+//     }, []);
+
+//     return { user, getUserSession, clearUserSession };
+// };
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserLogin } from "../../domain/entities/User";
+import { useEffect, useState } from "react";
 
 export const useUserLocalStorage = () => {
-    const [user, setUser] = useState<UserLogin | null>(null);
+    const [user, setUser] = useState<string | null>(null);
 
     const getUserSession = async () => {
-        try {
-            const userData = await AsyncStorage.getItem("user");
-            if (userData) setUser(JSON.parse(userData));
-        } catch (error) {
-            console.error("Error al obtener la sesión del usuario:", error);
-        }
-    };
-
-    const clearUserSession = async () => {
-        try {
-            await AsyncStorage.removeItem("user");
-            setUser(null);
-        } catch (error) {
-            console.error("Error al cerrar sesión:", error);
-        }
+        const token = await AsyncStorage.getItem("token");
+        setUser(token);
     };
 
     useEffect(() => {
         getUserSession();
     }, []);
 
-    return { user, getUserSession, clearUserSession };
+    return { user, getUserSession };
 };

@@ -1,23 +1,44 @@
+import { ApiFlashmeet } from '../../../data/sources/remote/api/ApiFlashmeet';
+import { UserLoginInterface } from '../../../domain/entities/User';
+import qs from 'qs'; // Importa qs
 
-import { UserLocalRepositoryImpl } from "../../../data/repositories/UserLocalRepository";
-import { UserLoginInterface } from "../../entities/User";
+export const loginAuthUseCase = async (values: UserLoginInterface) => {
+    try {
+        // Formatear los datos correctamente en x-www-form-urlencoded
+        const formData = qs.stringify({
+            email: values.email,
+            clave: values.clave,
+        });
 
-const userLocalRepository = new UserLocalRepositoryImpl();
+        // Realizar la solicitud con el formato correcto usando fetch
+        const response = await fetch(ApiFlashmeet.defaults.baseURL + "/auth/iniciarSesion", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formData,
+        });
 
-export const loginAuthUseCase = async (credentials: UserLoginInterface) => {
-    const storedUser = await userLocalRepository.getUser();
+        // Verificar si la respuesta fue exitosa (status 2xx)
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Error desconocido');
+        }
 
-    if (!storedUser) {
-        return { success: false, message: "Usuario no encontrado" };
-    }
+        const data = await response.json();
 
-    // Validar credenciales (incluyendo el usuario por defecto "admin / admin")
-    if (
-        (credentials.email === storedUser.email && credentials.password === storedUser.password) ||
-        (credentials.email === "Admin" && credentials.password === "Admin")
-    ) {
-        return { success: true, data: storedUser };
-    } else {
-        return { success: false, message: "Credenciales incorrectas" };
+        // Agregar console.log para confirmar que la conexión fue exitosa
+        console.log("Login exitoso, respuesta del servidor:", data);
+
+        return { success: true, data };
+    } catch (error: unknown) {
+        console.error("Error en loginAuthUseCase:", error);
+
+        // Verificar el tipo de error y su mensaje
+        if (error instanceof Error) {
+            return { success: false, message: error.message };
+        }
+
+        return { success: false, message: "Error en la conexión al servidor. Intenta más tarde." };
     }
 };

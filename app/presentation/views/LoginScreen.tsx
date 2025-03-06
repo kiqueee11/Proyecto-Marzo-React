@@ -1,12 +1,21 @@
-import React from "react";
-import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, Image, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { PropsStackNavigation } from "../interfaces/StackNav";
 import { LoginViewModel } from "../viewModel/LoginViewModel";
+import { FormInputInline } from "../components/FormInputInLine";
+import { RoundedButton } from "../components/RoundedButton";
 
-export function LoginScreen({ navigation}: PropsStackNavigation) {
-    const { email, password, onChangeLogin, login, errorMessage } = LoginViewModel();
+export function LoginScreen({ navigation }: PropsStackNavigation) {
+    const { email, clave, onChangeLogin, login, errorMessage, isLoading } = LoginViewModel();
+
+    useEffect(() => {
+        // Limpia errores cuando el usuario empieza a escribir
+        if (errorMessage) {
+            onChangeLogin("errorMessage", "");
+        }
+    }, [email, clave]);
 
     return (
         <LinearGradient
@@ -16,27 +25,44 @@ export function LoginScreen({ navigation}: PropsStackNavigation) {
             style={styles.container}
         >
             <Image source={require("../../assets/flashmeet_logo.png")} style={styles.logoSplash} />
-            
+
             <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Correo"
+                <FormInputInline
+                    placeholder={"Correo electrónico"}
                     keyboardType="email-address"
-                    value={email}
-                    onChangeText={(text) => onChangeLogin("email", text)}
+                    secureTextEntry={false}
+                    onPressFormInterface={(text) => onChangeLogin("email", text)}
                 />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Contraseña"
-                    secureTextEntry
-                    value={password}
-                    onChangeText={(text) => onChangeLogin("password", text)}
+                <FormInputInline
+                    placeholder={"Contraseña"}
+                    keyboardType="default"
+                    secureTextEntry={true}
+                    onPressFormInterface={(text) => onChangeLogin("clave", text)}
                 />
                 {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
             </View>
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Main")}>
-                <Text style={styles.buttonText}>Iniciar Sesión</Text>
-            </TouchableOpacity>
+
+            <View style={styles.buttonContainer}>
+            {isLoading ? (
+                <ActivityIndicator size="large" color="#fff" />
+            ) : (
+                <RoundedButton 
+                    text={"Iniciar Sesión"} 
+                    onPressFromInterface={() => {
+                        login().then((isLoggedIn) => {
+                            if (isLoggedIn) {
+                                console.log("Usuario logueado correctamente, redirigiendo a la pantalla principal.");
+                                navigation.navigate("Main");
+                            } else {
+                                console.log("Fallo en el login. Verifica las credenciales.");
+                            }
+                        });
+                    }} 
+                />
+            )}
+        </View>
+
+
             <View style={styles.linkContainer}>
                 <TouchableOpacity onPress={() => navigation.navigate("Register")}>
                     <Text style={styles.link}>¿No tienes cuenta? Regístrate</Text>
@@ -46,15 +72,25 @@ export function LoginScreen({ navigation}: PropsStackNavigation) {
     );
 }
 
-
-
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
         paddingHorizontal: 20,
     },
+    buttonContainer: {       
+            width: "100%",
+            height: 50,
+            backgroundColor: "black",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 10,
+            shadowColor: "#000",
+            shadowOpacity: 0.2,
+            shadowOffset: { width: 0, height: 3 },
+            elevation: 4,
+    },    
     logoSplash: {
         width: 300,
         height: 300,
@@ -110,3 +146,5 @@ export const styles = StyleSheet.create({
         textDecorationLine: "underline",
     },
 });
+
+export default LoginScreen;

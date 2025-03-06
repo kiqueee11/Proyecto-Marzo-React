@@ -3,8 +3,10 @@ import { UserLogin } from "../../entities/User";
 
 export const SaveUserUseCase = async (user: UserLogin) => {
     try {
-        await AsyncStorage.setItem("user", JSON.stringify(user));
+        await AsyncStorage.setItem("token", user.token);
+        await AsyncStorage.setItem("refreshToken", user.refreshToken);
+        await AsyncStorage.setItem("userId", user.userId.toString());
     } catch (error) {
-        console.error("Error al guardar el usuario:", error);
+        console.error("Error guardando los datos del usuario:", error);
     }
 };
