@@ -19,19 +19,20 @@ export type RootStackParamsList = {
     Friends: undefined,
     Chat: undefined
 }
+
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
 export default function AppNavigator() {
-return (
-    <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Main" component={MainScreen} />
-        <Stack.Screen name="Friends" component={FriendsScreen} />
-        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />        
-        <Stack.Screen name="Chat" component={ChatScreen} />
-    </Stack.Navigator>
-);
+    return (    
+        <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Splash" component={SplashScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Main" component={MainScreen} />
+            <Stack.Screen name="Friends" component={FriendsScreen} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />        
+            <Stack.Screen name="Chat" component={ChatScreen} />
+        </Stack.Navigator>
+    );
 }

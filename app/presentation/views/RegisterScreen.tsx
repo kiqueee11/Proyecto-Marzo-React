@@ -88,7 +88,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
             ToastAndroid.show("Registro exitoso", ToastAndroid.LONG);
             navigation.navigate("Login");
         } else {
-            ToastAndroid.show(result.message || "Error en el registro", ToastAndroid.LONG);
+            ToastAndroid.show("Error en el registro", ToastAndroid.LONG);
         }
     };
 
@@ -213,6 +213,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                         <FormInputInline
                             placeholder={"Nombre de usuario"}
                             keyboardType="default"
+                            value={nombre}
                             secureTextEntry={false}
                             onPressFormInterface={(text) => onChangeRegister("nombre", text)}
                         />
@@ -224,6 +225,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                         <FormInputInline
                             placeholder={"Contraseña"}
                             keyboardType="default"
+                            value={clave}
                             secureTextEntry={true}
                             onPressFormInterface={(text) => onChangeRegister("clave", text)}
                         />
@@ -231,6 +233,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                             placeholder={"Repetir Contraseña"}
                             keyboardType="default"
                             secureTextEntry={true}
+                            value={repeatClave}
                             onPressFormInterface={(text) => {
                                 onChangeRegister("repeatClave", text);
                                 if (text !== clave) {
@@ -249,6 +252,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                         <FormInputInline
                             placeholder={"Correo electrónico"}
                             keyboardType="email-address"
+                            value={email}
                             secureTextEntry={false}
                             onPressFormInterface={(text) => onChangeRegister("email", text)}
                         />
@@ -261,6 +265,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                             placeholder={"Sexo (HOMBRE/MUJER)"}
                             keyboardType="default"
                             secureTextEntry={false}
+                            value={sexo}
                             onPressFormInterface={(text) => {
                                 onChangeRegister("sexo", text);
                                 if (!["HOMBRE", "MUJER"].includes(text)) {
@@ -281,6 +286,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                         <FormInputInline
                             placeholder={"Ciudad"}
                             keyboardType="default"
+                            value={city}
                             secureTextEntry={false}
                             onPressFormInterface={handleCityChange}
                         />
@@ -294,6 +300,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                         <FormInputInline
                             placeholder={"Fecha de Nacimiento (DD-MM-YYYY)"}
                             keyboardType="default"
+                            value={fechaNacimiento}
                             secureTextEntry={false}
                             onPressFormInterface={(text) => onChangeRegister("fechaNacimiento", text)}
                         />
@@ -305,6 +312,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                         <FormInputInline
                             placeholder={"Descripción"}
                             keyboardType="default"
+                            value={descripcion}
                             secureTextEntry={false}
                             onPressFormInterface={(text) => onChangeRegister("descripcion", text)}
                         />
@@ -316,6 +324,7 @@ export function RegisterScreen({ navigation }: PropsStackNavigation) {
                         <FormInputInline
                             placeholder={"Distancia en metros (ej. 12000)"}
                             keyboardType="numeric"
+                            value={distancia.toString()}
                             secureTextEntry={false}
                             onPressFormInterface={(text) => onChangeRegister("distancia", text)}
                         />

@@ -43,25 +43,24 @@ export function LoginScreen({ navigation }: PropsStackNavigation) {
             </View>
 
             <View style={styles.buttonContainer}>
-            {isLoading ? (
-                <ActivityIndicator size="large" color="#fff" />
-            ) : (
-                <RoundedButton 
-                    text={"Iniciar Sesión"} 
-                    onPressFromInterface={() => {
-                        login().then((isLoggedIn) => {
-                            if (isLoggedIn) {
-                                console.log("Usuario logueado correctamente, redirigiendo a la pantalla principal.");
-                                navigation.navigate("Main");
-                            } else {
-                                console.log("Fallo en el login. Verifica las credenciales.");
-                            }
-                        });
-                    }} 
-                />
-            )}
-        </View>
-
+                {isLoading ? (
+                    <ActivityIndicator size="large" color="#fff" />
+                ) : (
+                    <RoundedButton 
+                        text={"Iniciar Sesión"} 
+                        onPressFromInterface={() => {
+                            login().then((isLoggedIn) => {
+                                if (isLoggedIn) {
+                                    console.log("Usuario logueado correctamente, redirigiendo a la pantalla principal.");
+                                    navigation.navigate("Main"); // Navega a la pantalla principal si el login es exitoso
+                                } else {
+                                    console.log("Fallo en el login. Verifica las credenciales.");
+                                }
+                            });
+                        }} 
+                    />
+                )}
+            </View>
 
             <View style={styles.linkContainer}>
                 <TouchableOpacity onPress={() => navigation.navigate("Register")}>
@@ -79,18 +78,18 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 20,
     },
-    buttonContainer: {       
-            width: "100%",
-            height: 50,
-            backgroundColor: "black",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 10,
-            shadowColor: "#000",
-            shadowOpacity: 0.2,
-            shadowOffset: { width: 0, height: 3 },
-            elevation: 4,
-    },    
+    buttonContainer: {
+        width: "100%",
+        height: 50,
+        backgroundColor: "black",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 3 },
+        elevation: 4,
+    },
     logoSplash: {
         width: 300,
         height: 300,

@@ -1,39 +1,42 @@
 import { useState } from "react";
-import { loginAuthUseCase } from "../../domain/useCases/auth/LoginAuth";
+import { AuthRepository } from "../../data/repositories/AuthRepository";
 
-export function LoginViewModel() {
-    const [email, setEmail] = useState("");
-    const [clave, setClave] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+export const LoginViewModel = () => {
+    const [email, setEmail] = useState<string>("");
+    const [clave, setClave] = useState<string>("");
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onChangeLogin = (field: string, value: string) => {
-        if (field === "email") setEmail(value);
-        if (field === "clave") setClave(value);
+        if (field === "email") {
+            setEmail(value);
+        } else if (field === "clave") {
+            setClave(value);
+        }
     };
 
-    const login = async (): Promise<boolean> => {
-        setIsLoading(true);
+    const login = async () => {
         try {
-            const response = await loginAuthUseCase({ email, clave });
-            if (response.success) {
-                setIsLoading(false);
-                
-                // Agregar un console.log para mostrar que el login fue exitoso
-                console.log("Login exitoso, datos del usuario:", response.data);
-                
+            setIsLoading(true);
+            console.log("Datos enviados al backend:", { email, clave });
+            const loginResponse = await AuthRepository.login({ email, clave });
+    
+            // Ahora el token estaría correctamente disponible si login fue exitoso
+            if (loginResponse.success && loginResponse.data && loginResponse.data.token) {
+                console.log("Login exitoso");
                 return true;
             } else {
-                setErrorMessage(response.message || "Error desconocido");  // Aquí se setea el mensaje de error
-                setIsLoading(false);
+                setErrorMessage(loginResponse.message || "Error al iniciar sesión.");
                 return false;
             }
         } catch (error) {
-            setErrorMessage("Error al iniciar sesión. Intenta nuevamente.");
-            setIsLoading(false);
+            setErrorMessage("Hubo un problema al iniciar sesión.");
             return false;
+        } finally {
+            setIsLoading(false);
         }
     };
+    
 
     return {
         email,
@@ -43,4 +46,4 @@ export function LoginViewModel() {
         errorMessage,
         isLoading,
     };
-}
+};
