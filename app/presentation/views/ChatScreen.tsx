@@ -1,397 +1,400 @@
-import React, { useState, useRef, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, KeyboardAvoidingView, Platform, Modal } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { PropsStackNavigation } from "../interfaces/StackNav";
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  SafeAreaView,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  Alert
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import authStorage from '../../data/sigletons/authDataSingleton';
+import ChatViewModel from '../viewModel/ChatViewModel';
+import { PropsStackNavigation } from '../interfaces/StackNav';
 
-export function ChatScreen({ navigation}: PropsStackNavigation) {
-    const [messages, setMessages] = useState([
-        { id: "1", text: "¡Hola! ¿En qué puedo ayudarte?", sender: "bot" },
-    ]);
-    const [inputText, setInputText] = useState("");
-    const [showIdentityModal, setShowIdentityModal] = useState(false);
-    const [isIdentityRevealed, setIsIdentityRevealed] = useState(false);
-    const [userName, setUserName] = useState("Username");
-    const [userAvatar, setUserAvatar] = useState(
-        require("../../assets/flashmeet_logo.png")
-    );
-    const [showActionIcons, setShowActionIcons] = useState(false); 
-    const [showActionPopup, setShowActionPopup] = useState(false); 
-    const [actionPopupText, setActionPopupText] = useState(""); 
-    const flatListRef = useRef<FlatList>(null);
+// Interfaz para los mensajes
+interface IMessage {
+  id: string;
+  senderId: string;
+  text: string;
+  timestamp: number;
+  read: boolean;
+}
 
-    const botResponses = [
-        "¡Eso suena interesante! 🤔",
-        "Cuéntame más sobre eso...",
-        "Jajaja, buena esa. 😂",
-        "No estoy seguro, pero puedo intentarlo.",
-        "Hmm... Déjame pensarlo. 🤔",
-        "Buena pregunta, nunca lo había pensado así.",
-        "¡Exacto! Estoy totalmente de acuerdo.",
-        "Esa es una forma interesante de verlo.",
-    ];
+export function ChatScreen({ navigation }: PropsStackNavigation) {
+  const {
+    chat,
+    messages,
+    loading,
+    error,
+    sending,
+    createChat,
+    getUserChats,
+    sendMessage,
+  } = ChatViewModel();
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowIdentityModal(true);
-        }, 30000);
+  const [messageText, setMessageText] = useState('');
+  const [chatId, setChatId] = useState<string | null>(null);
+  const [initializingChat, setInitializingChat] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const flatListRef = useRef<FlatList<IMessage>>(null);
+  const userId = authStorage.getUserId();
 
-        return () => clearTimeout(timer);
-    }, []);
-
-    const sendMessage = () => {
-        if (inputText.trim() === "") return;
-
-        const newMessages = [
-            ...messages,
-            { id: Date.now().toString(), text: inputText, sender: "me" },
-        ];
-        setMessages(newMessages);
-        setInputText("");
-
-        setTimeout(() => {
-            const botReply =
-                botResponses[Math.floor(Math.random() * botResponses.length)];
-            setMessages([
-                ...newMessages,
-                { id: Date.now().toString(), text: botReply, sender: "bot" },
-            ]);
-        }, 1500);
+  // Iniciar chat al cargar la pantalla con manejo de errores mejorado
+  useEffect(() => {
+    const initializeChat = async () => {
+      setInitializingChat(true);
+      setErrorMessage(null);      
+      
+      try {
+        // Si la API directa falla, intentamos alternativa
+        if (userId) {
+          // Intenta crear directamente con el ID del usuario
+          const newChatId = await createChat(userId);
+          if (newChatId) {
+            setChatId(newChatId);
+            console.log("Chat creado con método alternativo:", newChatId);
+            return;
+          }
+        }
+        
+        // Si todo falla, mostramos un mensaje de error
+        setErrorMessage("No se pudo crear el chat después de varios intentos. Por favor, inténtalo más tarde.");
+      } catch (err: any) {
+        setErrorMessage(err?.message || "Error al reintentar la creación del chat");
+      } finally {
+        setInitializingChat(false);
+      }
     };
 
-    useEffect(() => {
+    if (!chatId) {
+      initializeChat();
+    }
+  }, []);
+
+  // Reintentar la creación del chat
+  const handleRetry = async () => {
+    setInitializingChat(true);
+    setErrorMessage(null);
+    
+    
+  };
+
+  // Desplazarse al final de la lista cuando llegan nuevos mensajes
+  useEffect(() => {
+    if (messages.length > 0 && flatListRef.current) {
+      setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
-    }, [messages]);
+      }, 100);
+    }
+  }, [messages]);
 
-    const revealIdentity = () => {
-        setUserAvatar(require("../../assets/perfil.png")); 
-        setUserName("Carlos Pérez");
-        setIsIdentityRevealed(true);
-        setShowIdentityModal(false);
-        setShowActionIcons(true); 
-    };
+  // Manejar el envío de mensajes con validación
+  const handleSendMessage = async () => {
+    if (!messageText.trim() || !chatId) return;
+    
+    try {
+      const success = await sendMessage(chatId, messageText.trim());
+      if (success) {
+        setMessageText('');
+      } else {
+        Alert.alert("Error", "No se pudo enviar el mensaje");
+      }
+    } catch (error) {
+      console.error("Error al enviar mensaje:", error);
+      Alert.alert("Error", "Ocurrió un error al enviar el mensaje");
+    }
+  };
 
-    const handleActionPress = (action: string) => {
-        setActionPopupText(action);
-        setShowActionPopup(true);
-    };
+  // Formatear la hora del mensaje
+  const formatTime = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
 
-    const closeActionPopup = () => {
-        setShowActionPopup(false);
-    };
-
-    const restartChat = () => {
-        setShowIdentityModal(false); 
-        setShowActionIcons(false); 
-        setMessages([]); 
-        setInputText(""); 
-
-        navigation.replace("Chat"); 
-    };
-
+  // Renderizar cada mensaje
+  const renderMessageItem = ({ item }: { item: IMessage }) => {
+    const isMine = item.senderId === userId;
+    
     return (
-        <LinearGradient
-            colors={["#E35D66", "#A479AF"]}
-            start={{ x: 0, y: 0.5 }}
-            end={{ x: 1, y: 0.5 }}
-            style={styles.chatContainer}
-        >
-            <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={{ flex: 1 }}
-            >
-                <View style={styles.headerContainer}>
-                    <TouchableOpacity
-                        onPress={() => navigation.goBack()}
-                        style={styles.backButton}
-                    >
-                        <Ionicons name="arrow-back" size={30} color="white" />
-                    </TouchableOpacity>
-                    <Image source={userAvatar} style={styles.userAvatar} />
-                    <Text style={styles.usernameText}>{userName}</Text>
-
-                    {isIdentityRevealed && showActionIcons && (
-                        <View style={styles.actionIconsContainer}>
-                            <TouchableOpacity
-                                onPress={() =>
-                                    handleActionPress("¿Deseas ver perfil?")
-                                }
-                                style={styles.actionIcon}
-                            >
-                                <Ionicons
-                                    name="person"
-                                    size={24}
-                                    color="white"
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() =>
-                                    handleActionPress(
-                                        "¿Deseas agregar como amigo?"
-                                    )
-                                }
-                                style={styles.actionIcon}
-                            >
-                                <Ionicons
-                                    name="person-add"
-                                    size={24}
-                                    color="white"
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() =>
-                                    handleActionPress(
-                                        "¿Deseas iniciar videollamada?"
-                                    )
-                                }
-                                style={styles.actionIcon}
-                            >
-                                <Ionicons
-                                    name="videocam"
-                                    size={24}
-                                    color="white"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </View>
-
-                <FlatList
-                    ref={flatListRef}
-                    data={messages}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <View
-                            style={
-                                item.sender === "me"
-                                    ? styles.myMessage
-                                    : styles.otherMessage
-                            }
-                        >
-                            <Text
-                                style={
-                                    item.sender === "me"
-                                        ? styles.myMessageText
-                                        : styles.otherMessageText
-                                }
-                            >
-                                {item.text}
-                            </Text>
-                        </View>
-                    )}
-                    contentContainerStyle={{ flexGrow: 1, padding: 10 }}
-                    onContentSizeChange={() =>
-                        flatListRef.current?.scrollToEnd({ animated: true })
-                    }
-                    onLayout={() =>
-                        flatListRef.current?.scrollToEnd({ animated: true })
-                    }
-                />
-
-                <View style={styles.chatInputContainer}>
-                    <TextInput
-                        style={styles.chatInput}
-                        placeholder="Escribe un mensaje..."
-                        placeholderTextColor="#999"
-                        value={inputText}
-                        onChangeText={setInputText}
-                    />
-                    <TouchableOpacity
-                        onPress={sendMessage}
-                        style={styles.sendButton}
-                    >
-                        <Ionicons name="send" size={24} color="white" />
-                    </TouchableOpacity>
-                </View>
-            </KeyboardAvoidingView>
-
-            <Modal visible={showIdentityModal} transparent animationType="fade">
-                <View style={styles.chatModalContainer}>
-                    <View style={styles.chatModalContent}>
-                        <Text style={styles.chatModalText}>
-                            ¿Deseas revelar tu identidad?
-                        </Text>
-                        <View style={styles.chatModalButtons}>
-                            <TouchableOpacity
-                                style={styles.chatModalButtonYes}
-                                onPress={revealIdentity}
-                            >
-                                <Text style={styles.chatModalButtonText}>
-                                    Sí
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.chatModalButtonNo}
-                                onPress={restartChat}
-                            >
-                                <Text style={styles.chatModalButtonText}>
-                                    No
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
-            <Modal visible={showActionPopup} transparent animationType="fade">
-                <View style={styles.chatModalContainer}>
-                    <View style={styles.chatModalContent}>
-                        <Text style={styles.chatModalText}>
-                            {actionPopupText}
-                        </Text>
-                        <View style={styles.chatModalButtons}>
-                            <TouchableOpacity
-                                style={styles.chatModalButtonYes}
-                                onPress={closeActionPopup}
-                            >
-                                <Text style={styles.chatModalButtonText}>
-                                    Aceptar
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.chatModalButtonNo}
-                                onPress={closeActionPopup}
-                            >
-                                <Text style={styles.chatModalButtonText}>
-                                    Cancelar
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-        </LinearGradient>
+      <View style={[
+        styles.messageContainer,
+        isMine ? styles.myMessageContainer : styles.otherMessageContainer
+      ]}>
+        <View style={[
+          styles.messageBubble,
+          isMine ? styles.myMessageBubble : styles.otherMessageBubble
+        ]}>
+          <Text style={[
+            styles.messageText,
+            isMine ? styles.myMessageText : styles.otherMessageText
+          ]}>
+            {item.text}
+          </Text>
+          <Text style={[
+            styles.timeText,
+            isMine ? styles.myTimeText : styles.otherTimeText
+          ]}>
+            {formatTime(item.timestamp)}
+          </Text>
+        </View>
+      </View>
     );
-};
+  };
 
-export const styles = StyleSheet.create({
-    chatContainer: {
-        flex: 1,
-    },
-    chatModalContainer: {
-        flex: 1,
-        backgroundColor: "rgba(0,0,0,0.6)",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    chatModalContent: {
-        backgroundColor: "white",
-        padding: 20,
-        borderRadius: 10,
-        width: "80%",
-        alignItems: "center",
-    },
-    chatModalText: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 15,
-    },
-    chatModalButtons: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        width: "100%",
-    },
-    chatModalButtonYes: {
-        backgroundColor: "#28a745",
-        padding: 10,
-        borderRadius: 5,
-        width: "40%",
-        alignItems: "center",
-    },
-    chatModalButtonNo: {
-        backgroundColor: "#dc3545",
-        padding: 10,
-        borderRadius: 5,
-        width: "40%",
-        alignItems: "center",
-    },
-    chatModalButtonText: {
-        color: "white",
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-    backButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 15,
-    },
-    headerContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 15,
-        paddingTop: 35,
-    },
-    userAvatar: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-    },
-    usernameText: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "white",
-        marginLeft: 10,
-        fontStyle: "italic",
-    },
-    actionIconsContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        position: "absolute",
-        right: 10,
-        top: 10,
-        paddingHorizontal: 15,
-        paddingTop: 40,
-    },
-    actionIcon: {
-        marginLeft: 10,
-    },
-    myMessage: {
-        alignSelf: "flex-end",
-        backgroundColor: "black",
-        padding: 10,
-        borderRadius: 20,
-        marginVertical: 5,
-        maxWidth: "70%",
-    },
-    myMessageText: {
-        fontSize: 16,
-        color: "white",
-    },
-    chatInputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 10,
-        backgroundColor: "white",
-        borderRadius: 25,
-        margin: 10,
-    },
-    chatInput: {
-        flex: 1,
-        fontSize: 16,
-        color: "black",
-        paddingHorizontal: 10,
-    },
-    sendButton: {
-        backgroundColor: "#A479AF",
-        padding: 10,
-        borderRadius: 25,
-        marginLeft: 5,
-    },
-    otherMessage: {
-        alignSelf: "flex-start",
-        backgroundColor: "white",
-        padding: 10,
-        borderRadius: 20,
-        marginVertical: 5,
-        maxWidth: "70%",
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-    },
-    otherMessageText: {
-        fontSize: 16,
-        color: "black",
-    },
+  // Renderizar el separador entre mensajes
+  const renderSeparator = () => <View style={styles.separator} />;
 
+  // Renderizar el encabezado del chat
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <TouchableOpacity 
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Icon name="arrow-back" size={24} color="#000" />
+      </TouchableOpacity>
+      <Text style={styles.headerTitle}>Chat Contigo Mismo</Text>
+      <View style={styles.emptySpace} />
+    </View>
+  );
+
+  // Renderizar el componente principal
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
+      <KeyboardAvoidingView 
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      >
+        {renderHeader()}
+        
+        {(initializingChat || (loading && !chat)) ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#007BFF" />
+            <Text style={styles.loadingText}>Cargando chat...</Text>
+          </View>
+        ) : errorMessage || error ? (
+          <View style={styles.errorContainer}>
+            <Icon name="alert-circle" size={48} color="#FF3B30" />
+            <Text style={styles.errorText}>{errorMessage || error}</Text>
+            <TouchableOpacity 
+              style={styles.retryButton}
+              onPress={handleRetry}
+            >
+              <Text style={styles.retryButtonText}>Reintentar</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            renderItem={renderMessageItem}
+            keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={renderSeparator}
+            contentContainerStyle={styles.messagesContainer}
+            onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>
+                  No hay mensajes aún. ¡Comienza una conversación contigo mismo!
+                </Text>
+              </View>
+            }
+          />
+        )}
+        
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Escribe un mensaje..."
+            value={messageText}
+            onChangeText={setMessageText}
+            multiline
+            maxLength={500}
+            editable={!initializingChat && !errorMessage && !!chatId}
+          />
+          <TouchableOpacity 
+            style={[
+              styles.sendButton, 
+              (!messageText.trim() || !chatId || initializingChat) && styles.disabledSendButton
+            ]}
+            onPress={handleSendMessage}
+            disabled={!messageText.trim() || sending || !chatId || initializingChat}
+          >
+            {sending ? (
+              <ActivityIndicator size="small" color="#FFF" />
+            ) : (
+              <Icon name="send" size={24} color="#FFF" />
+            )}
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F6F6F6'
+  },
+  container: {
+    flex: 1
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E1E1E1'
+  },
+  backButton: {
+    padding: 4
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  emptySpace: {
+    width: 32
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#8A8A8A'
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20
+  },
+  errorText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#FF3B30',
+    textAlign: 'center'
+  },
+  retryButton: {
+    marginTop: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#007BFF',
+    borderRadius: 8
+  },
+  retryButtonText: {
+    color: '#FFF',
+    fontWeight: 'bold'
+  },
+  messagesContainer: {
+    padding: 16,
+    paddingBottom: 16
+  },
+  messageContainer: {
+    marginBottom: 12,
+    maxWidth: '80%'
+  },
+  myMessageContainer: {
+    alignSelf: 'flex-end'
+  },
+  otherMessageContainer: {
+    alignSelf: 'flex-start'
+  },
+  messageBubble: {
+    padding: 12,
+    borderRadius: 18,
+    minWidth: 80
+  },
+  myMessageBubble: {
+    backgroundColor: '#007BFF',
+    borderBottomRightRadius: 4
+  },
+  otherMessageBubble: {
+    backgroundColor: '#E5E5EA',
+    borderBottomLeftRadius: 4
+  },
+  messageText: {
+    fontSize: 16,
+    marginBottom: 4
+  },
+  myMessageText: {
+    color: '#FFF'
+  },
+  otherMessageText: {
+    color: '#000'
+  },
+  timeText: {
+    fontSize: 12,
+    alignSelf: 'flex-end'
+  },
+  myTimeText: {
+    color: 'rgba(255, 255, 255, 0.7)'
+  },
+  otherTimeText: {
+    color: 'rgba(0, 0, 0, 0.5)'
+  },
+  separator: {
+    height: 8
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#FFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E1E1E1'
+  },
+  input: {
+    flex: 1,
+    minHeight: 40,
+    maxHeight: 100,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginRight: 8
+  },
+  sendButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#007BFF',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  disabledSendButton: {
+    backgroundColor: '#B0B0B0'
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    marginTop: 50
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#8A8A8A',
+    textAlign: 'center',
+    lineHeight: 24
+  }
 });
+
+export default ChatScreen;

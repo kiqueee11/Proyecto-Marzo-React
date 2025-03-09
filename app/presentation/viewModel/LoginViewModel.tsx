@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { AuthRepository } from "../../data/repositories/AuthRepository";
+import { useUser } from "../context/UserContext";
 
 export const LoginViewModel = () => {
     const [email, setEmail] = useState<string>("");
     const [clave, setClave] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { cargarUsuario } = useUser(); // Usamos el contexto para almacenar datos del usuario
 
     const onChangeLogin = (field: string, value: string) => {
         if (field === "email") {
@@ -19,12 +21,15 @@ export const LoginViewModel = () => {
         try {
             setIsLoading(true);
             console.log("Datos enviados al backend:", { email, clave });
+            
             const loginResponse = await AuthRepository.login({ email, clave });
     
-            // Ahora el token estaría correctamente disponible si login fue exitoso
-            if (loginResponse.success && loginResponse.data && loginResponse.data.token) {
-                console.log("Login exitoso");
-                return true;
+            if (loginResponse.success && loginResponse.data?.userId) {
+                console.log("Login exitoso, obteniendo datos del usuario...");
+                
+                await cargarUsuario(loginResponse.data.userId); // Carga los datos en UserContext
+                
+                return true; // Retorna true si el login es exitoso
             } else {
                 setErrorMessage(loginResponse.message || "Error al iniciar sesión.");
                 return false;
@@ -36,7 +41,6 @@ export const LoginViewModel = () => {
             setIsLoading(false);
         }
     };
-    
 
     return {
         email,

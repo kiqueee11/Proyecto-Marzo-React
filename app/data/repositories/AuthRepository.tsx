@@ -1,15 +1,21 @@
-import { UserRegisterInterface, UserLoginInterface } from "../../domain/entities/User";
-import { ApiFlashmeet } from "../sources/remote/api/ApiFlashmeet";
-import qs from "qs";
-import { ApiResponse } from "../../domain/entities/ApiInterface";
+import { UserLoginInterface, UserRegisterInterface } from "../../domain/entities/User";
+import { ApiFlashmeet, ApiMediaController } from "../sources/remote/api/ApiFlashmeet";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {  ApiResponseMedia, ApiResponse } from "../../domain/entities/ApiInterface";
+import qs from "qs";
+import { GetDataRepository } from "../../domain/repositories/GetDataRepository";
+import { Platform } from "react-native";
+import AuthStorage from "../sigletons/authDataSingleton";
+
+
+
 
 export const AuthRepository = {
     register: async (userData: UserRegisterInterface) => {
         try {
             const formData = new FormData();
-    
-            // Agregar datos al FormData
+            
+            // Configura el formData como ya lo tienes
             formData.append("nombre", userData.nombre);
             formData.append("clave", userData.clave);
             formData.append("email", userData.email);
@@ -19,21 +25,23 @@ export const AuthRepository = {
             formData.append("posicion", userData.posicion);
             formData.append("distancia", userData.distancia.toString());
     
-            // Adjuntar imágenes al FormData
             if (Array.isArray(userData.imagenes)) {
                 userData.imagenes.forEach((uri, index) => {
-                    const uriParts = uri.split('/');
-                    const fileName = uriParts[uriParts.length - 1];
+                    if (index < 6) {
+                        const uriParts = uri.split('/');
+                        const fileName = uriParts[uriParts.length - 1];
     
-                    formData.append(`image${index + 1}`, {
-                        uri: uri,
-                        type: 'image/jpeg',
-                        name: fileName
-                    } as any);
+                        formData.append(`image${index + 1}`, {
+                            uri: uri,
+                            type: 'image/jpeg',
+                            name: fileName,
+                        } as any);
+                    }
                 });
             }
     
-            const response = await ApiFlashmeet.post<ApiResponse>('/auth/signup', formData, {
+            // Hacer la petición al backend para el registro
+            const response = await ApiFlashmeet.post<ApiResponse>('/auth/auth/signup', formData, {
                 headers: { 
                     "Content-Type": "multipart/form-data",
                     "Accept": "application/json"
@@ -41,18 +49,12 @@ export const AuthRepository = {
             });
     
             if (response.data && response.data.success) {
-                console.log("✅ Registro exitoso:", response.data);
-
-                // Guardar la primera imagen en AsyncStorage solo si existen imágenes
-                if (Array.isArray(userData.imagenes) && userData.imagenes.length > 0) {
-                    await AsyncStorage.setItem('profileImage', userData.imagenes[0]);
-                    console.log("Imagen de perfil guardada en AsyncStorage:", userData.imagenes[0]);
-                }
+                console.log("✅ Registro exitoso:", response.data);   
                 return { success: true, data: response.data };
-
-            }
+            }else{
     
             return { success: false, message: "Error en el registro" };
+            }
         } catch (error: any) {
             console.error("Error al registrar:", error);
             return { success: false, message: "Error en el registro" };
@@ -68,7 +70,7 @@ export const AuthRepository = {
             
             console.log("FormData enviado:", formData);
             
-            const response = await ApiFlashmeet.post<ApiResponse>("/auth/iniciarSesion", formData, {
+            const response = await ApiFlashmeet.post<ApiResponse>("/auth/auth/iniciarSesion", formData, {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" }
             });
     
@@ -76,10 +78,13 @@ export const AuthRepository = {
     
             // Verifica la estructura correcta de la respuesta
             if (response.data.success && response.data.data && response.data.data.token) {
-                // Guardar el token que está dentro de data
+                // Guardar el token y el userId
                 await AsyncStorage.setItem("userToken", response.data.data.token);
                 await AsyncStorage.setItem("userEmail", credentials.email);
+                await AsyncStorage.setItem("userId", response.data.data.userId);
                 console.log("Login exitoso, token guardado:", response.data.data.token);
+                console.log("UserId guardado:", response.data.data.userId);
+                AuthStorage.setAuthData(response.data.data.token, response.data.data.userId); 
                 return { success: true, data: response.data.data };
             } else {
                 console.log("Fallo en la autenticación:", response.data);
@@ -120,29 +125,29 @@ export const AuthRepository = {
             return null;
         }
     },
-
-
-    // Método para obtener los datos del usuario después del login
-    obtenerDatosUsuario: async (email: string, token: string) => {
+    // Agregar método para obtener el userId
+    obtenerUserId: async (): Promise<string | null> => { 
         try {
-            const response = await ApiFlashmeet.get<ApiResponse>(`/users/internal/get-user-by-email?email=${email}`, {
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
-                }
-            });
-
-            if (response.data && response.data.success) {
-                console.log("Datos del usuario obtenidos:", response.data);
-                return response.data.data; // Deberías devolver los datos del usuario
+            const userId = await AsyncStorage.getItem("userId");
+            if (!userId) {
+                console.warn("No se encontró el userId en AsyncStorage");
             }
-
-            throw new Error("No se pudieron obtener los datos del usuario");
+            return userId;
         } catch (error) {
-            console.error("Error obteniendo datos del usuario:", error);
-            throw error;
+            console.error("Error obteniendo el userId:", error);
+            return null;
         }
     },
+    // Método para actualizar la imagen de perfil
+    actualizarImagenPerfil(imagenUrl: string) {
+        try {
+            AsyncStorage.setItem("profileImage", imagenUrl);
+            console.log("Imagen de perfil actualizada:", imagenUrl);
+        } catch (error) {
+            console.error("Error actualizando la imagen de perfil:", error);
+        }
+    },
+    
     // Método para cerrar sesión (limpiar datos)
     logout: async () => {
         try {
@@ -155,7 +160,3 @@ export const AuthRepository = {
         }
     }
 };
-
-function obtenerDatosUsuario(email: string, token: string) {
-    throw new Error("Function not implemented.");
-}

@@ -3,6 +3,14 @@ export interface UserLoginInterface {
     clave: string;
     errorMessage?: string;
 }
+export interface Usuario {
+    userName: string;
+    edad: number;
+    sexo: string;
+    descripcion: string;
+    fotos: string[];
+}
+
 
 export interface UserLogin {
     userId: number;       // ID del usuario autenticado
@@ -28,3 +36,8 @@ export interface UserInterface {
     email: string;
     clave: string;
 }
+export interface IUser {
+    id: number;
+    nombre: string;
+    posicion: string;
+  }

@@ -13,6 +13,7 @@ interface Friend {
 }
 
 export function FriendsScreen({ navigation }: PropsStackNavigation) {
+    
     const friends: Friend[] = [
         { id: "1", name: "Manuel", message: "Hola, ¿cómo estás?", image: { uri: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg" } },
         { id: "2", name: "Carlos", message: "¿Qué tal tu día?", image: { uri: "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg" } },

@@ -2,9 +2,16 @@ import axios from 'axios';
 
 // Crear instancia de Axios con la URL del backend
 const ApiFlashmeet = axios.create({
-    baseURL: 'http://10.0.2.2:8089/auth', // Solo la base del backend
+    baseURL: 'http://10.0.2.2:8089/', // Solo la base del backend
     timeout: 10000 // Tiempo de espera de 10 segundos
 });
+
+const ApiMediaController = axios.create({
+    baseURL: 'http://10.0.2.2:8091/', // Solo la base del backend
+    timeout: 10000 // Tiempo de espera de 10 segundos
+})
+
+
 
 // Interceptor de respuesta para manejar errores
 ApiFlashmeet.interceptors.response.use(
@@ -41,4 +48,4 @@ ApiFlashmeet.interceptors.response.use(
     }
 );
 
-export { ApiFlashmeet };
+export { ApiFlashmeet, ApiMediaController };
